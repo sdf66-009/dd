@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)file:///C:/Users/hp/OneDrive/Desktop/dalal1038.html -->
+<html lang="ar" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المستشفى المتكامل</title>
+    <link rel="stylesheet" href="./نظام إدارة المستشفى المتكامل_files/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        /* الهيدر */
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff10"><polygon points="1000,100 1000,0 0,100"/></svg>');
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* التنقل */
+        .nav-tabs {
+            display: flex;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.4s ease;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* الأقسام */
+        .form-section, .info-section {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #e9ecef;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 2px;
+        }
+
+        /* نموذج الحجز */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        button {
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+        }
+
+        /* بطاقات الأطباء */
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .doctor-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #f1f3f4;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .doctor-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #e9ecef;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5em;
+        }
+
+        .doctor-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+
+        .doctor-card .specialty {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .doctor-card .experience {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        /* بطاقات المواعيد */
+        .appointment-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .appointment-card:hover {
+            transform: translateX(-5px);
+        }
+
+        .appointment-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .appointment-card p {
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+
+        .status-confirmed {
+            border-left-color: #27ae60;
+        }
+
+        .status-pending {
+            border-left-color: #f39c12;
+        }
+
+        /* قسم التواصل */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .contact-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2em;
+        }
+
+        .contact-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .contact-card p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        /* الشبكة المتجاوبة */
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-tab {
+                padding: 15px;
+            }
+            
+            header h1 {
+                font-size: 2.2em;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .form-section, .info-section {
+                padding: 25px;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* التأكيد */
+        #confirmation {
+            text-align: center;
+            padding: 60px 40px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+        }
+
+        #confirmation i {
+            font-size: 5em;
+            color: #27ae60;
+            margin-bottom: 30px;
+        }
+
+        #confirmation h3 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        #confirmation p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 نظام إدارة المستشفى المتكامل</h1>
+            <p>الرعاية الصحية بأعلى معايير الجودة العالمية</p>
+        </header>
+
+        <div class="nav-tabs">
+            <div class="nav-tab" onclick="showTab(&#39;booking&#39;)">
+                <i class="fas fa-calendar-check"></i>
+                حجز موعد
+            </div>
+            <div class="nav-tab" onclick="showTab(&#39;doctors&#39;)">
+                <i class="fas fa-user-md"></i>
+                فريق الأطباء
+            </div>
+            <div class="nav-tab" onclick="showTab(&#39;records&#39;)">
+                <i class="fas fa-file-medical"></i>
+                السجلات الطبية
+            </div>
+            <div class="nav-tab active" onclick="showTab(&#39;contact&#39;)">
+                <i class="fas fa-headset"></i>
+                تواصل معنا
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- قسم حجز الموعد -->
+            <div id="booking-tab" class="tab-content hidden">
+                <div class="form-section">
+                    <h2 class="section-title">📅 حجز موعد جديد</h2>
+                    <form id="bookingForm">
+                        <div class="form-group">
+                            <label for="patientId"><i class="fas fa-id-card"></i> الرقم الوطني / الهوية:</label>
+                            <input type="text" id="patientId" required="" placeholder="أدخل رقم الهوية">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clinic"><i class="fas fa-clinic-medical"></i> اختر العيادة:</label>
+                            <select id="clinic" required="" onchange="updateDoctors()">
+                                <option value="">-- اختر العيادة --</option>
+                                <option value="cardiology">عيادة القلب</option>
+                                <option value="orthopedics">عيادة العظام</option>
+                                <option value="pediatrics">عيادة الأطفال</option>
+                                <option value="surgery">عيادة الجراحة</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="doctor"><i class="fas fa-user-md"></i> اختر الطبيب:</label>
+                            <select id="doctor" required="">
+                                <option value="">-- اختر الطبيب --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="appointmentDate"><i class="fas fa-clock"></i> تاريخ ووقت الموعد:</label>
+                            <input type="datetime-local" id="appointmentDate" required="">
+                        </div>
+
+                        <button type="submit">
+                            <i class="fas fa-check-circle"></i> تأكيد الحجز
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- قسم فريق الأطباء -->
+            <div id="doctors-tab" class="tab-content hidden">
+                <div class="form-section">
+                    <h2 class="section-title">👨‍⚕️ فريق الأطباء لدينا</h2>
+                    <div class="doctors-grid" id="doctorsGrid">
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        ❤️
+                    </div>
+                    <h4>د. أحمد محمد</h4>
+                    <div class="specialty">استشاري أمراض القلب</div>
+                    <div class="experience">15 سنة خبرة</div>
+                    <p>طبيب متميز في مجال التخصص مع خبرة واسعة في التشخيص والعلاج</p>
+                </div>
+            
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        💓
+                    </div>
+                    <h4>د. سارة خالد</h4>
+                    <div class="specialty">أخصائية قلب وجراحة</div>
+                    <div class="experience">10 سنوات خبرة</div>
+                    <p>طبيب متميز في مجال التخصص مع خبرة واسعة في التشخيص والعلاج</p>
+                </div>
+            
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        🦴
+                    </div>
+                    <h4>د. محمد علي</h4>
+                    <div class="specialty">استشاري جراحة العظام</div>
+                    <div class="experience">20 سنة خبرة</div>
+                    <p>طبيب متميز في مجال التخصص مع خبرة واسعة في التشخيص والعلاج</p>
+                </div>
+            
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        🦵
+                    </div>
+                    <h4>د. فاطمة عبدالله</h4>
+                    <div class="specialty">أخصائية عظام ومفاصل</div>
+                    <div class="experience">12 سنة خبرة</div>
+                    <p>طبيب متميز في مجال التخصص مع خبرة واسعة في التشخيص والعلاج</p>
+                </div>
+            
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        👶
+                    </div>
+                    <h4>د. خالد إبراهيم</h4>
+                    <div class="specialty">استشاري طب الأطفال</div>
+                    <div class="experience">18 سنة خبرة</div>
+                    <p>طبيب متميز في مجال التخصص مع خبرة واسعة في التشخيص والعلاج</p>
+                </div>
+            
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        🧒
+                    </div>
+                    <h4>د. لينا مصطفى</h4>
+                    <div class="specialty">أخصائية نمو الأطفال</div>
+                    <div class="experience">8 سنوات خبرة</div>
+                    <p>طبيب متميز في مجال التخصص مع خبرة واسعة في التشخيص والعلاج</p>
+                </div>
+            
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        🔪
+                    </div>
+                    <h4>د. عمر حسن</h4>
+                    <div class="specialty">استشاري جراحة عامة</div>
+                    <div class="experience">25 سنة خبرة</div>
+                    <p>طبيب متميز في مجال التخصص مع خبرة واسعة في التشخيص والعلاج</p>
+                </div>
+            
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        👨‍⚕️
+                    </div>
+                    <h4>د. هدى كمال</h4>
+                    <div class="specialty">أخصائية جراحة تجميل</div>
+                    <div class="experience">14 سنة خبرة</div>
+                    <p>طبيب متميز في مجال التخصص مع خبرة واسعة في التشخيص والعلاج</p>
+                </div>
+            </div>
+                </div>
+            </div>
+
+            <!-- قسم السجلات الطبية -->
+            <div id="records-tab" class="tab-content hidden">
+                <div class="form-section">
+                    <h2 class="section-title">📋 السجلات الطبية</h2>
+                    <div class="form-group">
+                        <label for="searchRecord"><i class="fas fa-search"></i> ابحث برقم الهوية:</label>
+                        <input type="text" id="searchRecord" placeholder="أدخل رقم الهوية للبحث">
+                        <button onclick="searchRecords()" style="margin-top: 15px;">
+                            <i class="fas fa-search"></i> بحث في السجلات
+                        </button>
+                    </div>
+                    <div id="medicalRecords">
+                        <!-- سيتم عرض السجلات هنا -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم التواصل -->
+            <div id="contact-tab" class="tab-content">
+                <div class="form-section">
+                    <h2 class="section-title">📞 تواصل معنا</h2>
+                    <div class="contact-grid">
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <h4>اتصل بنا</h4>
+                            <p>+966 12 345 6789</p>
+                            <p>+966 12 345 6790</p>
+                        </div>
+                        
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h4>البريد الإلكتروني</h4>
+                            <p>info@hospital.com</p>
+                            <p>support@hospital.com</p>
+                        </div>
+                        
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h4>العنوان</h4>
+                            <p>المملكة العربية السعودية</p>
+                            <p>الرياض - حي العليا</p>
+                        </div>
+                        
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h4>ساعات العمل</h4>
+                            <p>الأحد - الخميس: 8 ص - 10 م</p>
+                            <p>الجمعة - السبت: 4 م - 10 م</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 40px;">
+                        <h3 class="section-title">✉️ أرسل رسالة</h3>
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="name">الاسم الكامل:</label>
+                                <input type="text" id="name" required="" placeholder="أدخل اسمك الكامل">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">البريد الإلكتروني:</label>
+                                <input type="email" id="email" required="" placeholder="أدخل بريدك الإلكتروني">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">الرسالة:</label>
+                                <textarea id="message" rows="5" required="" placeholder="أدخل رسالتك..."></textarea>
+                            </div>
+                            
+                            <button type="submit">
+                                <i class="fas fa-paper-plane"></i> إرسال الرسالة
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تأكيد الحجز -->
+            <div id="confirmation" class="hidden">
+                <i class="fas fa-check-circle"></i>
+                <h3>تم الحجز بنجاح!</h3>
+                <p id="confirmationDetails"></p>
+                <button onclick="showTab(&#39;booking&#39;)">
+                    <i class="fas fa-plus-circle"></i> حجز موعد جديد
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الأطباء مع صور افتراضية
+        const doctors = {
+            cardiology: [
+                { id: 1, name: "د. أحمد محمد", specialty: "استشاري أمراض القلب", experience: "15 سنة", icon: "❤️" },
+                { id: 2, name: "د. سارة خالد", specialty: "أخصائية قلب وجراحة", experience: "10 سنوات", icon: "💓" }
+            ],
+            orthopedics: [
+                { id: 3, name: "د. محمد علي", specialty: "استشاري جراحة العظام", experience: "20 سنة", icon: "🦴" },
+                { id: 4, name: "د. فاطمة عبدالله", specialty: "أخصائية عظام ومفاصل", experience: "12 سنة", icon: "🦵" }
+            ],
+            pediatrics: [
+                { id: 5, name: "د. خالد إبراهيم", specialty: "استشاري طب الأطفال", experience: "18 سنة", icon: "👶" },
+                { id: 6, name: "د. لينا مصطفى", specialty: "أخصائية نمو الأطفال", experience: "8 سنوات", icon: "🧒" }
+            ],
+            surgery: [
+                { id: 7, name: "د. عمر حسن", specialty: "استشاري جراحة عامة", experience: "25 سنة", icon: "🔪" },
+                { id: 8, name: "د. هدى كمال", specialty: "أخصائية جراحة تجميل", experience: "14 سنة", icon: "👨‍⚕️" }
+            ]
+        };
+
+        // تحديث قائمة الأطباء
+        function updateDoctors() {
+            const clinic = document.getElementById('clinic').value;
+            const doctorSelect = document.getElementById('doctor');
+            doctorSelect.innerHTML = '<option value="">-- اختر الطبيب --</option>';
+            
+            if (clinic && doctors[clinic]) {
+                doctors[clinic].forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor.id;
+                    option.textContent = `${doctor.name} - ${doctor.specialty}`;
+                    doctorSelect.appendChild(option);
+                });
+            }
+        }
+
+        // عرض فريق الأطباء
+        function loadDoctors() {
+            const doctorsGrid = document.getElementById('doctorsGrid');
+            let allDoctors = [];
+            
+            Object.values(doctors).forEach(clinicDoctors => {
+                allDoctors = allDoctors.concat(clinicDoctors);
+            });
+            
+            doctorsGrid.innerHTML = allDoctors.map(doctor => `
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        ${doctor.icon}
+                    </div>
+                    <h4>${doctor.name}</h4>
+                    <div class="specialty">${doctor.specialty}</div>
+                    <div class="experience">${doctor.experience} خبرة</div>
+                    <p>طبيب متميز في مجال التخصص مع خبرة واسعة في التشخيص والعلاج</p>
+                </div>
+            `).join('');
+        }
+
+        // إظهار/إخفاء التبويبات
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            event.target.classList.add('active');
+            
+            if (tabName === 'doctors') {
+                loadDoctors();
+            }
+        }
+
+        // معالجة نموذج الحجز
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const appointment = {
+                patientId: document.getElementById('patientId').value,
+                clinic: document.getElementById('clinic').options[document.getElementById('clinic').selectedIndex].text,
+                doctor: document.getElementById('doctor').options[document.getElementById('doctor').selectedIndex].text,
+                date: document.getElementById('appointmentDate').value,
+                status: 'confirmed',
+                timestamp: new Date().toISOString()
+            };
+            
+            // حفظ في localStorage
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            appointments.push(appointment);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+            
+            // إظهار تأكيد الحجز
+            document.querySelector('.main-content').innerHTML = document.getElementById('confirmation').outerHTML;
+            document.getElementById('confirmation').classList.remove('hidden');
+            document.getElementById('confirmationDetails').textContent = 
+                `تم حجز موعد في ${appointment.clinic} مع ${appointment.doctor} في ${new Date(appointment.date).toLocaleString('ar-SA')}`;
+        });
+
+        // معالجة نموذج التواصل
+        document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('شكراً لك! تم استلام رسالتك وسيتم الرد عليك في أقرب وقت.');
+            this.reset();
+        });
+
+        // تحميل البيانات عند البدء
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDoctors();
+        });
+    </script>
+
+</body></html>
